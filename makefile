@@ -1,13 +1,13 @@
 CC = gcc
 CFLAGS = -ansi -Wall -pedantic
 
-all: main
+all: sustituir
 
-main: main.o
-	$(CC) $(CFLAGS) -o main main.o
+sustituir: sustituir.o
+	$(CC) $(CFLAGS) -o sustituir sustituir.o
 
-main.o:
-	$(CC) $(CFLAGS) -c main.c
+sustituir.o:
+	$(CC) $(CFLAGS) -c sustituir.c
 
 clean:
-	rm *.o main
+	rm *.o sustituir

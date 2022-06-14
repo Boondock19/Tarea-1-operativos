@@ -203,18 +203,29 @@ int main(int argc, char const *argv[])
         while ( !feof(fp) )
         {
         
-        
-        char subString[2];
-        char dobleCheck[100];
-        char tripleCheck[100];
-        char finalCheck[100];
-        struct nodo* temporal;
-        int i;
-        int k;
-        int verificacion;
-        int flag;
-        int posicion;
-        int v;
+            /* 
+                - subString string utilizado para almacenar signos de puntuacion.
+                - dobleCheck,tripleCheck y finalCheck son strings utilizados para
+                almacenar las palabras y modificarlas en distintas situaciones.
+                - temporal es un apuntador a un nodo, en este caso al head de la
+                lista enlazada.
+                - i,k,v son ints utilizados para los ciclos for de esta seccion.
+                - verificacion es un int utilizado para colocar el caracter \0 al
+                final de una palabra al construirla caracter por caracter.
+                - flag es un int , que como indica su nombre cumple la funcion de 
+                un flag para un condicional.   
+            */
+            char subString[2];
+            char dobleCheck[100];
+            char tripleCheck[100];
+            char finalCheck[100];
+            struct nodo* temporal;
+            int i;
+            int k;
+            int verificacion;
+            int flag;
+            int posicion;
+            int v;
         
             fscanf(fp,"%s ",copyText);
             
@@ -237,7 +248,13 @@ int main(int argc, char const *argv[])
                     
                 }
             }
-        
+            /* 
+                Verificamos la palabra caracter por caracter, mientras vamos
+                generando substrings, si conseguimos que un substrings es 
+                igual a una cadena cad1 la guardamos junto a variables de
+                contexto para saber cual palabra debemos copiar/modificar antes 
+                de imprimir.
+            */
              for(k = 0; k < strlen(copyText); k++){
                 flag = 0;
                 verificacion = k + 1;
@@ -245,15 +262,12 @@ int main(int argc, char const *argv[])
                 dobleCheck[verificacion] = '\0';
                 
                 /* 
-                printf("Este es el dobleCheck dentro del for luego de asignarle el char %s\n",dobleCheck);
-                */ 
-                
-                    /* 
                     Verificamos primero el head
                     si conseguimos la palabra la retornamos
                     caso contrario buscamos en el siguiente
                     elemento de la lista
                 */
+
                 temporal = head;
 
                 if (strcmp(temporal->data.cad1,dobleCheck) == 0) {
@@ -264,6 +278,7 @@ int main(int argc, char const *argv[])
                 /* 
                     Verificacion de la lista de nodos, menos el ultimo
                 */
+
                 while(temporal->next != NULL) {
                     if (strcmp(temporal->data.cad1,dobleCheck) == 0) {
                         strcpy(tripleCheck,temporal->data.cad2);
@@ -275,44 +290,30 @@ int main(int argc, char const *argv[])
                 /* 
                     Verificacion del ultimo nodo
                 */
+
                 if (strcmp(temporal->data.cad1,dobleCheck) == 0) {
                     strcpy(tripleCheck,temporal->data.cad2);
                     flag = 1;
                 }
 
 
-
+                /* Si se consiguio una cadena cad1 entra en el if*/
                 if(flag == 1) {
-                    /* 
-                    printf("Este es el tripleCheck dentro del if del for %s\n",tripleCheck);
-                    printf("Este es el finalCheck dentro del if del for %s\n",tripleCheck);
-                    printf("Este es el finalCheck dentro del if del for %s\n",tripleCheck);
-                    */
+                   
                     strcpy(finalCheck,tripleCheck);
-                    
                     strcpy(tripleCheck,"");
                     posicion = k;
                 }
-                /* 
-                printf("%d \n",strcmp(tripleCheck,""));
-                printf("Este es el tripleCheck dentro del for %s\n",tripleCheck);
-                */
+            
             }
-
-            
-            /* dobleCheck[k] = '\0'; 
-            
-            printf("Este es el dobleCheck luego del for %s\n",dobleCheck);
-            printf("Este es el finalCheck luego del for %s\n",finalCheck);
-            */ 
-            
-            
+   
             /* 
                 Verificamos primero el head
                 si conseguimos la palabra la retornamos
                 caso contrario buscamos en el siguiente
                 elemento de la lista
             */
+            
             temporal = head;
 
             if (strcmp(temporal->data.cad1,copyText) == 0) {
@@ -323,6 +324,7 @@ int main(int argc, char const *argv[])
             /* 
                 Verificacion de la lista de nodos, menos el ultimo
             */
+
             while(temporal->next != NULL) {
                 if (strcmp(temporal->data.cad1,copyText) == 0) {
                     strcpy(copyText,temporal->data.cad2);
@@ -334,23 +336,32 @@ int main(int argc, char const *argv[])
             /* 
                 Verificacion del ultimo nodo
             */
+
             if (strcmp(temporal->data.cad1,copyText) == 0) {
                 strcpy(copyText,temporal->data.cad2);
             }
             
 
-            
+            /* 
+                Si finalCheck es distinto de "" y posicion > 0
+                entonces vamos a cambiar lo que obtuvimos del texto
+                por la cadena guardada en finaCheck, caracter por caracter.
+                Por ultimo reiniciamos posicion y finalCheck
+            */
             if (posicion != 0 && strcmp(finalCheck,"") != 0 ) {
-               /* printf("Entro en el if de copiado\n"); */
+               
                 
                 for (v = posicion;v >= 0; v-- ) {
                     copyText[v] = finalCheck[v];
                 }
-                v = 0;
+                posicion = 0;
                 strcpy(finalCheck,"");
+                
             }
            
-
+            /* 
+                Si eliminamos un signo de puntuacion, se lo agregamos
+            */
             if (ptr != NULL ) {
                 
                 strcat(copyText,subString);
@@ -358,11 +369,9 @@ int main(int argc, char const *argv[])
             
             printf("%s ",copyText); 
             
-
-          
-
-            }
+        }
         
+        /* Si faltan archivos por procesar ... */
         if ( j + 1 < argc) {
              printf("\n--");
         }

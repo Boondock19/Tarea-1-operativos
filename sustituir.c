@@ -5,6 +5,11 @@
 
 
 /* 
+    Jose Matias Gonzalez Valarezo
+    15-10627
+*/
+
+/* 
     Definicion de los pares de caracteres
 */
 typedef struct
@@ -32,7 +37,7 @@ struct nodo
 
 /* 
     Funcion que se encarga crear una nueva instancia
-    de un pair, a partir del argumento separardor
+    de un pair, a partir del argumento separador
     y una linea del archivo de palabras.txt
 */
 pair createPair(char *linea, char *separador) {
@@ -98,9 +103,18 @@ void agregarNodo(struct nodo** head, pair p) {
 
 int main(int argc, char const *argv[])
 {
-    /* code */
+    
 
-      /* Declaracion de variables */
+    /* Declaracion de variables 
+        - fp file descriptor
+        - textPalabras, array para alocar strings
+        - copyText, array para alocar strings al leer los archivos
+        a cambiar.
+        - ptr, char para tomar subStrings
+        - separador, string con constante valor ":"
+        - N int con valor fijo, para calcular malloc de arrays
+        - j variable para un ciclo for, para verificar strings.
+    */
     FILE *fp;
     char *textPalabras;
     char copyText[100];
@@ -194,8 +208,8 @@ int main(int argc, char const *argv[])
         struct nodo* temporal;
         int i;
         
-            fscanf(fp,"%s",copyText);
-        
+            fscanf(fp,"%s ",copyText);
+            
             /* 
                 Verificamos caracter por caracter para verificar si hay
                 un signo de puntuacion en la palabra, en caso positivo,

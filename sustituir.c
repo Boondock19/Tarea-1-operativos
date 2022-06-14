@@ -205,8 +205,16 @@ int main(int argc, char const *argv[])
         
         
         char subString[2];
+        char dobleCheck[100];
+        char tripleCheck[100];
+        char finalCheck[100];
         struct nodo* temporal;
         int i;
+        int k;
+        int verificacion;
+        int flag;
+        int posicion;
+        int v;
         
             fscanf(fp,"%s ",copyText);
             
@@ -230,7 +238,73 @@ int main(int argc, char const *argv[])
                 }
             }
         
+             for(k = 0; k < strlen(copyText); k++){
+                flag = 0;
+                verificacion = k + 1;
+                dobleCheck[k] = copyText[k];
+                dobleCheck[verificacion] = '\0';
+                
+                /* 
+                printf("Este es el dobleCheck dentro del for luego de asignarle el char %s\n",dobleCheck);
+                */ 
+                
+                    /* 
+                    Verificamos primero el head
+                    si conseguimos la palabra la retornamos
+                    caso contrario buscamos en el siguiente
+                    elemento de la lista
+                */
+                temporal = head;
 
+                if (strcmp(temporal->data.cad1,dobleCheck) == 0) {
+                    strcpy(tripleCheck,temporal->data.cad2);
+                    flag = 1;
+                }
+
+                /* 
+                    Verificacion de la lista de nodos, menos el ultimo
+                */
+                while(temporal->next != NULL) {
+                    if (strcmp(temporal->data.cad1,dobleCheck) == 0) {
+                        strcpy(tripleCheck,temporal->data.cad2);
+                        flag = 1;
+                    }   
+                    temporal = temporal->next;
+                }
+
+                /* 
+                    Verificacion del ultimo nodo
+                */
+                if (strcmp(temporal->data.cad1,dobleCheck) == 0) {
+                    strcpy(tripleCheck,temporal->data.cad2);
+                    flag = 1;
+                }
+
+
+
+                if(flag == 1) {
+                    /* 
+                    printf("Este es el tripleCheck dentro del if del for %s\n",tripleCheck);
+                    printf("Este es el finalCheck dentro del if del for %s\n",tripleCheck);
+                    printf("Este es el finalCheck dentro del if del for %s\n",tripleCheck);
+                    */
+                    strcpy(finalCheck,tripleCheck);
+                    
+                    strcpy(tripleCheck,"");
+                    posicion = k;
+                }
+                /* 
+                printf("%d \n",strcmp(tripleCheck,""));
+                printf("Este es el tripleCheck dentro del for %s\n",tripleCheck);
+                */
+            }
+
+            
+            /* dobleCheck[k] = '\0'; 
+            
+            printf("Este es el dobleCheck luego del for %s\n",dobleCheck);
+            printf("Este es el finalCheck luego del for %s\n",finalCheck);
+            */ 
             
             
             /* 
@@ -244,6 +318,7 @@ int main(int argc, char const *argv[])
             if (strcmp(temporal->data.cad1,copyText) == 0) {
                 strcpy(copyText,temporal->data.cad2);
             }
+            
 
             /* 
                 Verificacion de la lista de nodos, menos el ultimo
@@ -254,6 +329,7 @@ int main(int argc, char const *argv[])
                 }   
                 temporal = temporal->next;
             }
+            
 
             /* 
                 Verificacion del ultimo nodo
@@ -261,7 +337,19 @@ int main(int argc, char const *argv[])
             if (strcmp(temporal->data.cad1,copyText) == 0) {
                 strcpy(copyText,temporal->data.cad2);
             }
+            
 
+            
+            if (posicion != 0 && strcmp(finalCheck,"") != 0 ) {
+               /* printf("Entro en el if de copiado\n"); */
+                
+                for (v = posicion;v >= 0; v-- ) {
+                    copyText[v] = finalCheck[v];
+                }
+                v = 0;
+                strcpy(finalCheck,"");
+            }
+           
 
             if (ptr != NULL ) {
                 
@@ -269,7 +357,9 @@ int main(int argc, char const *argv[])
             }
             
             printf("%s ",copyText); 
+            
 
+          
 
             }
         

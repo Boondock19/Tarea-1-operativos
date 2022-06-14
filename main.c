@@ -97,7 +97,6 @@ int main(int argc, char const *argv[])
 
       /* Declaracion de variables */
     FILE *fp,*ofp;
-    char *text;
     char *textPalabras;
     char copyText[100];
     char *ptr;
@@ -110,9 +109,8 @@ int main(int argc, char const *argv[])
     /* Inicializamos la cabeza de la lista */ 
     struct nodo *head = NULL;
     struct nodo* temp;
-    int contadorNodos = 0;
 
-    printf("Principio de archivo, %s",text);
+    
 
     /* 
         Prueba de crear pares a partir del archivo palabras.txt
@@ -183,13 +181,13 @@ int main(int argc, char const *argv[])
     while ( !feof(fp) )
     {
        
-       char *ptr;
-       char *verificar;
+       char *copy;
        char subString;
+       struct nodo* temporal;
        int i;
         /* Alocando memoria para un array de chars */ 
         
-        verificar = (char*) malloc( sizeof(char) *N  );
+        copy = (char*) malloc( sizeof(char) *N  );
         
         /* Alocando memoria para un array de chars */ 
         
@@ -197,7 +195,7 @@ int main(int argc, char const *argv[])
         
         /* Verificando error al apartar memorio */
         
-        if (verificar == NULL) {
+        if (copy == NULL) {
             printf("Error obteniendo espacio de memorio\n");
             exit(1);
         }
@@ -206,20 +204,26 @@ int main(int argc, char const *argv[])
        
        /*
         printf("PTR: %s \n",ptr);
-        printf("%s \n",copyText);
         */
+        printf("%s \n",copyText);
+        
 
         /* 
             Verificamos caracter por caracter para verificar si hay
             un signo de puntuacion en la palabra, en caso positivo,
             se lo quitamos a la palabra y lo guardamos para ser agregado al final.
         */
+
         for(i = 0; i < strlen(copyText); i++){
             printf("caracter %c \n",copyText[i]);
+            ptr = NULL;
             if(copyText[i] == '.'){
                 printf("Entro en el if");
                 subString = copyText[i];
-                printf("valor de subString %c",subString); 
+                printf("valor de subString %c",subString);
+                copy = ".";
+                ptr = strtok(copyText,copy);
+                printf("Valor de PTR %s",ptr); 
                 /* 
                 ptr = strtok(copyText,subString);
                 printf("Valor de PTR %c",ptr);
@@ -228,7 +232,7 @@ int main(int argc, char const *argv[])
         }
       
 
-         struct nodo* temporal;
+         
 
         /* 
             Verificamos primero el head
@@ -260,14 +264,16 @@ int main(int argc, char const *argv[])
         }
 
 
-       
+        if (ptr != NULL ) {
+            
+            strcat(copyText,copy);
+        }
+        
         fprintf(ofp,"%s ",copyText);
         
-      /*
-        if (ptr != NULL ) {
-            fprintf(ofp,"%c",ptr);
-        }
-       */ 
+      
+        
+       
         
         
      /* 
@@ -314,7 +320,6 @@ int main(int argc, char const *argv[])
 
     printf("\n\n -- \n\n");
 
-    printf("%s",text);
 
     fclose(fp);
 

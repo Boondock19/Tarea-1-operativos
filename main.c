@@ -89,57 +89,21 @@ void agregarNodo(struct nodo** head, pair p) {
 
 }
 
-char findWord(struct nodo** head,char palabra) {
-    struct nodo* temporal;
 
-    /* 
-        Verificamos primero el head
-        si conseguimos la palabra la retornamos
-        caso contrario buscamos en el siguiente
-        elemento de la lista
-    */
-    temporal = *head;
-
-    if (strcmp(temporal->data.cad1,palabra) == 0) {
-        return palabra;
-    }
-
-    /* 
-        Verificacion de la lista de nodos, menos el ultimo
-    */
-    while(temporal->next != NULL) {
-        if (strcmp(temporal->data.cad1,palabra) == 0) {
-            return palabra;
-        }   
-        temporal = temporal->next;
-    }
-
-    /* 
-        Verificacion del ultimo nodo
-    */
-     if (strcmp(temporal->data.cad1,palabra) == 0) {
-        return palabra;
-    }
-
-    return "no encontrado";
-
-}
 
 int main(int argc, char const *argv[])
 {
     /* code */
 
       /* Declaracion de variables */
-    FILE *fp;
+    FILE *fp,*ofp;
     char *text;
     char *textPalabras;
-    int N = 100;
+    char copyText[100];
     char *ptr;
     char *separador= ":"; 
-    char string1[20] = "Hola ?";
-    char string2[10] = "HOLA ?";
-    int contadorLinea = 0;
-    char prueba[300];
+    int N = 100;
+    char ch;
    
     
 
@@ -208,44 +172,105 @@ int main(int argc, char const *argv[])
     /* Abriendo txt */ 
 
     fp = fopen("Archivo1.txt", "r");
-
+    ofp = fopen("file_replace_output.txt", "w+");
     /* Verificacion de error al abrir un archivo */
-    if(fp == NULL) {
+    if(fp == NULL || ofp == NULL) {
         printf("Error al abrir el archivo\n");
         exit(1);
     }
 
-    /* Alocando memoria para un array de chars */ 
-    
-    text = (char*) malloc( sizeof(char) *N  );
-    
-    /* Alocando memoria para un array de chars */ 
-    
-  
-    
-    /* Verificando error al apartar memorio */
-    
-    if (text == NULL) {
-        printf("Error obteniendo espacio de memorio\n");
-        exit(1);
-    }
-
-
-    /* Probando la funcion fgets */
-
-    printf("Texsaved antes de concatenar datos en el %s \n",text);
-
+   
     while ( !feof(fp) )
     {
-        size_t textLength;
-        int i;
-        char copyText[100];
-        contadorLinea++;
- 
-        fscanf(fp,"%s",text);
+       
+       char *ptr;
+       char *verificar;
+       char subString;
+       int i;
+        /* Alocando memoria para un array de chars */ 
+        
+        verificar = (char*) malloc( sizeof(char) *N  );
+        
+        /* Alocando memoria para un array de chars */ 
+        
+    
+        
+        /* Verificando error al apartar memorio */
+        
+        if (verificar == NULL) {
+            printf("Error obteniendo espacio de memorio\n");
+            exit(1);
+        }
+
+        fscanf(fp,"%s",copyText);
+       
+       /*
+        printf("PTR: %s \n",ptr);
+        printf("%s \n",copyText);
+        */
+
+        /* 
+            Verificamos caracter por caracter para verificar si hay
+            un signo de puntuacion en la palabra, en caso positivo,
+            se lo quitamos a la palabra y lo guardamos para ser agregado al final.
+        */
+        for(i = 0; i < strlen(copyText); i++){
+            printf("caracter %c \n",copyText[i]);
+            if(copyText[i] == '.'){
+                printf("Entro en el if");
+                subString = copyText[i];
+                printf("valor de subString %c",subString); 
+                /* 
+                ptr = strtok(copyText,subString);
+                printf("Valor de PTR %c",ptr);
+                */
+            }
+        }
+      
+
+         struct nodo* temporal;
+
+        /* 
+            Verificamos primero el head
+            si conseguimos la palabra la retornamos
+            caso contrario buscamos en el siguiente
+            elemento de la lista
+        */
+        temporal = head;
+
+        if (strcmp(temporal->data.cad1,copyText) == 0) {
+            strcpy(copyText,temporal->data.cad2);
+        }
+
+        /* 
+            Verificacion de la lista de nodos, menos el ultimo
+        */
+        while(temporal->next != NULL) {
+            if (strcmp(temporal->data.cad1,copyText) == 0) {
+                strcpy(copyText,temporal->data.cad2);
+            }   
+            temporal = temporal->next;
+        }
+
+        /* 
+            Verificacion del ultimo nodo
+        */
+        if (strcmp(temporal->data.cad1,copyText) == 0) {
+            strcpy(copyText,temporal->data.cad2);
+        }
 
 
-
+       
+        fprintf(ofp,"%s ",copyText);
+        
+      /*
+        if (ptr != NULL ) {
+            fprintf(ofp,"%c",ptr);
+        }
+       */ 
+        
+        
+     /* 
         printf("line[%06d]:  contents: %s", contadorLinea,
         prueba);
         printf("TEXTO DE TEXT,%s",prueba);
@@ -253,10 +278,28 @@ int main(int argc, char const *argv[])
 
         printf("TAMANO DE PRUEBA %d",textLength);
 
-        strcat(text,prueba);
-    
+        
+    */
+
     }
     
+
+    rewind(ofp);
+
+    while (1) {
+
+        ch = fgetc(ofp);
+
+        if (ch == EOF) {
+
+            break;
+
+        }
+
+        printf("%c", ch);
+
+    }
+
     /* Probando la funcion fscan */
 
     /* 
@@ -276,12 +319,6 @@ int main(int argc, char const *argv[])
     fclose(fp);
 
     /* comparacion de strings */
-
-
-
-    if (strcmp(string1,string2) == 0) {
-        printf("El string %s y %s son iguales",string1,string2);
-    }
 
     
     

@@ -30,6 +30,11 @@ struct nodo
 
 };
 
+/* 
+    Funcion que se encarga crear una nueva instancia
+    de un pair, a partir del argumento separardor
+    y una linea del archivo de palabras.txt
+*/
 pair createPair(char *linea, char *separador) {
     char *ptr;
     pair newPair;
@@ -96,27 +101,29 @@ int main(int argc, char const *argv[])
     /* code */
 
       /* Declaracion de variables */
-    FILE *fp,*ofp;
+    FILE *fp;
     char *textPalabras;
     char copyText[100];
     char *ptr;
     char *separador= ":"; 
     int N = 100;
-    char ch;
-   
+    /* Variables para manejar el input*/
+    int j = 1;
+    
     
 
     /* Inicializamos la cabeza de la lista */ 
     struct nodo *head = NULL;
-    struct nodo* temp;
-
     
 
     /* 
-        Prueba de crear pares a partir del archivo palabras.txt
+        Crear pares a partir del archivo palabras.txt
+        la posicion 1 de argv siempre debe contener
+        el primer archivo de texto que contiene los
+        pares cad1:cad2
     */
 
-    fp = fopen("palabras.txt","r");
+    fp = fopen(argv[1],"r");
 
     if (fp == NULL)
     {
@@ -135,197 +142,131 @@ int main(int argc, char const *argv[])
         exit(1);
     }
 
+
+    /* 
+        Leemos el archivo de los pares de palabras y los
+        procesamos con las funciones createPair y agregarNodo
+        de manera que dentro de la lista enlazada quedan
+        almacenados las keys Cad1.
+    */
     while (fscanf(fp,"%s",textPalabras) != EOF)
     {
         pair par;
-        printf("Dentro del while antes del strtok %s \n",textPalabras);
         
         par = createPair(textPalabras,separador);
 
         agregarNodo(&head, par);
-    
-        printf("Valores del par CAD1: %s y de CAD2: %s \n",par.cad1,par.cad2);
+   
     }
 
-    temp = head;
-    while(temp -> next != NULL ) {
-        printf("Este es el par del nodo, cad1: %s y cad2:%s \n",temp -> data.cad1 , temp -> data.cad2);
-        temp = temp -> next;
-    }
-
-    printf("Este es el par del ULTIMO nodo, cad1: %s y cad2:%s \n",temp -> data.cad1 , temp -> data.cad2);
+    /* Cerramos el archivo */
 
     fclose(fp);
 
-    /* 
-    
-    printf("Este es el textPalabra antes del strtok, %s",textPalabras);
-
-    ptr = strtok(textPalabras,separador);
-
-    printf("Este es el textPalabra luego del strtok, %s",textPalabras);
-
-    */
 
     /* Abriendo txt */ 
 
-    fp = fopen("Archivo1.txt", "r");
-    ofp = fopen("file_replace_output.txt", "w+");
-    /* Verificacion de error al abrir un archivo */
-    if(fp == NULL || ofp == NULL) {
-        printf("Error al abrir el archivo\n");
-        exit(1);
-    }
-
-   
-    while ( !feof(fp) )
-    {
-       
-       char *copy;
-       char subString;
-       struct nodo* temporal;
-       int i;
-        /* Alocando memoria para un array de chars */ 
-        
-        copy = (char*) malloc( sizeof(char) *N  );
-        
-        /* Alocando memoria para un array de chars */ 
-        
+    for(j = 2; j < argc; j++) {
+        fp = fopen(argv[j], "r");
     
-        
-        /* Verificando error al apartar memorio */
-        
-        if (copy == NULL) {
-            printf("Error obteniendo espacio de memorio\n");
+        /* Verificacion de error al abrir un archivo */
+        if(fp == NULL ) {
+            printf("Error al abrir el archivo\n");
             exit(1);
         }
 
-        fscanf(fp,"%s",copyText);
-       
-       /*
-        printf("PTR: %s \n",ptr);
+
+        /* 
+            Recorremos el archivo que contiene el texto
+            a modificar, en cada lectura verificamos
+            si la palabra que se esta leyendo actulmente
+            se encuentra en la lista enlazada, en caso 
+            positivo la reemplazamos por su respectiva
+            Cad2, en caso negativo simplemente imprimimos
+            la palabra.
         */
-        printf("%s \n",copyText);
+    
+        while ( !feof(fp) )
+        {
+        
+        
+        char subString[2];
+        struct nodo* temporal;
+        int i;
+        
+            fscanf(fp,"%s",copyText);
+        
+            /* 
+                Verificamos caracter por caracter para verificar si hay
+                un signo de puntuacion en la palabra, en caso positivo,
+                se lo quitamos a la palabra y lo guardamos para ser agregado al final.
+            */
+           
+            for(i = 0; i < strlen(copyText); i++){
+                
+                ptr = NULL;
+                if(copyText[i] == '.' || copyText[i] == ',' || copyText[i] == ';' ){
+                   
+                    subString[0] = copyText[i];
+                    subString[1] = '\0';
+                    
+                    
+                    ptr = strtok(copyText,subString);
+                    
+                }
+            }
         
 
-        /* 
-            Verificamos caracter por caracter para verificar si hay
-            un signo de puntuacion en la palabra, en caso positivo,
-            se lo quitamos a la palabra y lo guardamos para ser agregado al final.
-        */
+            
+            
+            /* 
+                Verificamos primero el head
+                si conseguimos la palabra la retornamos
+                caso contrario buscamos en el siguiente
+                elemento de la lista
+            */
+            temporal = head;
 
-        for(i = 0; i < strlen(copyText); i++){
-            printf("caracter %c \n",copyText[i]);
-            ptr = NULL;
-            if(copyText[i] == '.'){
-                printf("Entro en el if");
-                subString = copyText[i];
-                printf("valor de subString %c",subString);
-                copy = ".";
-                ptr = strtok(copyText,copy);
-                printf("Valor de PTR %s",ptr); 
-                /* 
-                ptr = strtok(copyText,subString);
-                printf("Valor de PTR %c",ptr);
-                */
-            }
-        }
-      
-
-         
-
-        /* 
-            Verificamos primero el head
-            si conseguimos la palabra la retornamos
-            caso contrario buscamos en el siguiente
-            elemento de la lista
-        */
-        temporal = head;
-
-        if (strcmp(temporal->data.cad1,copyText) == 0) {
-            strcpy(copyText,temporal->data.cad2);
-        }
-
-        /* 
-            Verificacion de la lista de nodos, menos el ultimo
-        */
-        while(temporal->next != NULL) {
             if (strcmp(temporal->data.cad1,copyText) == 0) {
                 strcpy(copyText,temporal->data.cad2);
-            }   
-            temporal = temporal->next;
-        }
+            }
 
-        /* 
-            Verificacion del ultimo nodo
-        */
-        if (strcmp(temporal->data.cad1,copyText) == 0) {
-            strcpy(copyText,temporal->data.cad2);
-        }
+            /* 
+                Verificacion de la lista de nodos, menos el ultimo
+            */
+            while(temporal->next != NULL) {
+                if (strcmp(temporal->data.cad1,copyText) == 0) {
+                    strcpy(copyText,temporal->data.cad2);
+                }   
+                temporal = temporal->next;
+            }
+
+            /* 
+                Verificacion del ultimo nodo
+            */
+            if (strcmp(temporal->data.cad1,copyText) == 0) {
+                strcpy(copyText,temporal->data.cad2);
+            }
 
 
-        if (ptr != NULL ) {
+            if (ptr != NULL ) {
+                
+                strcat(copyText,subString);
+            }
             
-            strcat(copyText,copy);
+            printf("%s ",copyText); 
+
+
+            }
+        
+        if ( j + 1 < argc) {
+             printf("\n--");
         }
-        
-        fprintf(ofp,"%s ",copyText);
-        
-      
-        
-       
-        
-        
-     /* 
-        printf("line[%06d]:  contents: %s", contadorLinea,
-        prueba);
-        printf("TEXTO DE TEXT,%s",prueba);
-        textLength = strlen(prueba);
-
-        printf("TAMANO DE PRUEBA %d",textLength);
-
-        
-    */
-
+        printf("\n");
+        fclose(fp);
     }
     
-
-    rewind(ofp);
-
-    while (1) {
-
-        ch = fgetc(ofp);
-
-        if (ch == EOF) {
-
-            break;
-
-        }
-
-        printf("%c", ch);
-
-    }
-
-    /* Probando la funcion fscan */
-
-    /* 
-
-    while(fscanf(fp,"%s",text) !=EOF ) {
-        printf("%s %d \n", text,contadorLinea);
-        strcat(text,text);
-        contadorLinea = contadorLinea + 1;
-    }
-
-    */
-
-    printf("\n\n -- \n\n");
-
-
-    fclose(fp);
-
-    /* comparacion de strings */
-
-    
+ 
     
     return 0;
 }

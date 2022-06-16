@@ -174,7 +174,7 @@ int main(int argc, char const *argv[])
     }
 
     /* Cerramos el archivo */
-
+    free(textPalabras);
     fclose(fp);
 
 
